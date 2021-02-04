@@ -1,7 +1,7 @@
-# jsgjzx_canteen
-a meal ordering system,made by Django,BootStrap and React
+# 善高の网站项目
+这里没有描述
 
-一个基于django的web点菜项目，
+一个基于django的web项目，
 本项目开发者来自:
 
 # 硅·PROGRAM
