@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'jsgjzx_canteen.urls'
+ROOT_URLCONF = 'jsgjzx.urls'
 
 TEMPLATES = [
     {
