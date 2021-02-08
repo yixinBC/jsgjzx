@@ -46,3 +46,14 @@ class Meal(models.Model):
 
     def __ge__(self, other) -> bool:
         return self > other or self == other
+
+
+class Food(models.Model):
+    name = models.CharField(verbose_name="名称", max_length=32)
+    commented = models.IntegerField(verbose_name="评价人数")
+    photo = models.ImageField(verbose_name="菜品图片", upload_to="foods", null=True)
+    # 菜品评价后的总打星数
+    stars = models.BigIntegerField(verbose_name="总星数")
+
+    def __str__(self) -> str:
+        return self.name
