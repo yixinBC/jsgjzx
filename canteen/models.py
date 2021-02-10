@@ -28,14 +28,17 @@ class Meal(models.Model):
     def __gt__(self, other) -> bool:
         return not self < other
 
-    # def __eq__(self, other) -> bool:
-    #     return self.date == other.date and self.index == other.index
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Meal):
+            return self.date == other.date and self.index == other.index
+        else:
+            return False
 
     def __le__(self, other) -> bool:
-        return self < other  # or self == other
+        return self < other or self == other
 
     def __ge__(self, other) -> bool:
-        return self > other  # or self == other
+        return self > other or self == other
 
 
 class Food(models.Model):
