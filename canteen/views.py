@@ -8,3 +8,7 @@ def index(request):
 
 def login(request):
     pass
+
+
+def class_login(request):
+    pass
