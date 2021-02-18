@@ -30,6 +30,7 @@
       <list>
         <option value="$MODULE_DIR$/templates" />
         <option value="$MODULE_DIR$/templates/index" />
+        <option value="$MODULE_DIR$/templates/canteen" />
       </list>
     </option>
   </component>

@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'canteen'
 urlpatterns = [
-    path('', views.index)
+    path('', views.index, name='index')
 ]
