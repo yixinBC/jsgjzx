@@ -15,8 +15,8 @@ def login_required(func):
                     request.session['has_login'] = True
                     return func(request, *args, **kwargs)
             except models.Student.DoesNotExist:
-                return redirect(reverse('canteen:login'))
-            return redirect(reverse('canteen:login'))
+                return redirect('canteen:login')
+            return redirect('canteen:login')
 
     return wrapper
 
@@ -30,12 +30,12 @@ def login(request):
         return render(request, 'canteen/login.html')
     elif request.method == 'POST':
         if request.session.get('has_login'):
-            return redirect(reverse('canteen:welcome'))
+            return redirect('canteen:welcome')
         stu_id = request.POST.get('stu_id')
         password = request.POST.get('password')
         try:
             if models.Student.objects.get(stu_id=stu_id).password == password:
-                response = redirect(reverse('canteen:welcome'))
+                response = redirect('canteen:welcome')
                 response.set_cookie('stu_id', stu_id, max_age=60 * 60 * 24 * 7)
                 response.set_cookie('password', password, max_age=60 * 60 * 24 * 7)
                 request.session['has_login'] = True
@@ -52,4 +52,14 @@ def class_login(request):
 
 @login_required
 def welcome(request):
-    pass
+    return render(request, 'canteen/welcome.html',
+                  {'student': models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))})
+
+
+@login_required
+def logout(request):
+    request.session.flush()
+    response = redirect('canteen:login')
+    response.delete_cookie('stu_id')
+    response.delete_cookie('password')
+    return response

@@ -5,20 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="{% static 'Si.ico' %}">
-  <link rel="stylesheet" media="screen" href="{% static 'particles.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-  <style>
-      form {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background-color: transparent;
-      }
-  </style>
-  <script src="{% static 'canteen/enrypt.js' %}"></script>
-  <title>食堂点菜系统——请登录</title>
+  <link rel="stylesheet" media="screen" href="{% static 'particles.css' %}">
+  <title>善高の网站</title>
 </head>
 <body>
 <nav class="navbar-dark bg-danger navbar-fixed-top navbar navbar-expand flex-column flex-md-row bd-navbar">
@@ -38,24 +28,18 @@
     </ul>
   </div>
 </nav>
-<form action="{% url 'canteen:login' %}" method="post" onsubmit="encrypt()">
-  <div class="form-group">
-    {% csrf_token %}
-    <label for="stu_id">输入学生编号</label>
-    <input id="stu_id" name="stu_id" type="text">
+<!-- particles.js container -->
+<div id="particles-js">
+  <div class="jumbotron">
+    <h1 class="display-4">{{ student.name }}：欢迎!</h1>
+    <p class="lead">开始点餐吧！</p>
+    <hr class="my-4">
+    <a class="btn btn-danger btn-lg" href="{% url 'canteen:login' %}" role="button">开始点餐</a>
+    <a class="btn btn-danger btn-lg" href="{% url 'canteen:logout' %}" role="button">退出登录</a>
   </div>
-  <div class="form-group">
-    <label for="password">输入密码</label>
-    <input id="password" name="password" type="password">
-    {% if error_msg %}
-      <span>{{ error_msg }}</span>
-    {% endif %}
-  </div>
-  <button type="submit" class="btn btn-danger mb-2" style="width:408px;height:60px">确认</button>
-</form>
-<div id="particles-js"></div>
+</div>
 <script src="https://cdn.bootcdn.net/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-<script src="{% static 'canteen/login_app.js' %}"></script>
+<script src="{% static 'index/index_app.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
