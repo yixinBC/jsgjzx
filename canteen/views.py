@@ -51,8 +51,10 @@ def class_login(request):
 
 @login_required
 def welcome(request):
+    student = models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
+    latest_meal = models.FoodForMeal.objects.filter(meal__gt=student.last_order).order_by('meal')
     return render(request, 'canteen/welcome.html',
-                  {'student': models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))})
+                  {'student': student, 'food_list': latest_meal})
 
 
 @login_required

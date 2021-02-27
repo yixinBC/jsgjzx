@@ -43,11 +43,11 @@
   <div class="form-group">
     {% csrf_token %}
     <label for="stu_id">输入学生编号</label>
-    <input id="stu_id" name="stu_id" type="text">
+    <input id="stu_id" name="stu_id" type="text" required>
   </div>
   <div class="form-group">
     <label for="password">输入密码</label>
-    <input id="password" name="password" type="password">
+    <input id="password" name="password" type="password" required>
     {% if error_msg %}
       <span>{{ error_msg }}</span>
     {% endif %}
