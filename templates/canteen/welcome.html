@@ -31,14 +31,14 @@
   <h1 class="display-4">{{ student.name }}：欢迎!</h1>
   <p class="lead">开始点餐吧！</p>
   <hr class="my-4">
-  <a class="btn btn-success btn-lg" data-toggle="collapse" href="#askMeal" role="button" aria-expanded="false"
-     aria-controls="askMeal">开始点餐</a>
+  <button class="btn btn-success btn-lg" data-toggle="collapse" type="button" aria-expanded="false"
+     aria-controls="askMeal" data-target="#askMeal">开始点餐</button>
   <a class="btn btn-success btn-lg" href="{% url 'canteen:logout' %}" role="button">退出登录</a>
 </div>
-<div class="collapse overflow-auto" id="askMeal">
+<div class="collapse" id="askMeal">
   {% for foodForMeal in food_list %}
     <div class="card">
-      <img src="{{ foodForMeal.food.photo.get_absolute_url }}" alt="{{ foodForMeal.food }}"
+      <img src="/image/{{ foodForMeal.food.photo }}" alt="{{ foodForMeal.food }}"
            class="rounded card-img-top">
       <div class="card-body">
         <h5 class="card-title">{{ foodForMeal.food }}</h5>
