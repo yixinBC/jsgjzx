@@ -11,14 +11,16 @@
   <title>善高の网站</title>
 </head>
 <body>
-<nav class="bg-success navbar-fixed-top navbar flex-md-row bd-navbar">
-  <div class="navbar-nav-scroll" id="navbarSupportedContent">
+<nav class="navbar-dark bg-danger navbar-fixed-top navbar navbar-expand flex-column flex-md-row bd-navbar">
+  <a class="navbar-brand" href="https://jsgjzx.jsxjyj.cn/">
+    <img alt="SG善高"
+         src="https://jsgjzx.jsxjyj.cn/upload/jsgjzx/site/logo/image/89842c20efe2475a8d1bbccd7a3fc4f1.jpg"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav bd-navbar-nav flex-row">
-      <li>
-        <a class="navbar-brand" href="https://jsgjzx.jsxjyj.cn/">
-          <img alt="SG善高"
-               src="https://jsgjzx.jsxjyj.cn/upload/jsgjzx/site/logo/image/89842c20efe2475a8d1bbccd7a3fc4f1.jpg"></a>
-      </li>
       <li class="nav-item">
         <a class="nav-link display-4" href="{% url 'index:index' %}">首页 <span class="sr-only">(current)</span></a>
       </li>
