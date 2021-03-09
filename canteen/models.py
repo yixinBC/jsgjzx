@@ -70,7 +70,7 @@ class Student(models.Model):
     stu_id = models.CharField(verbose_name="学号", max_length=6)
     name = models.CharField(verbose_name="姓名", max_length=16)
     password = models.CharField(verbose_name="密码—md5加密", max_length=32)
-    last_order = models.ForeignKey(Meal, verbose_name="上次点餐的Meal", on_delete=models.CASCADE)
+    last_order = models.ForeignKey(Meal, verbose_name="上次点餐的Meal", on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self) -> str:
         return f"{self.stu_id} {self.name}"
