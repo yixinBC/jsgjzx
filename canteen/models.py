@@ -65,7 +65,7 @@ class FoodForMeal(models.Model):
 
 
 class Student(models.Model):
-    asked_meal = models.ManyToManyField(FoodForMeal, blank=True, verbose_name="已点的餐")
+    asked_meal = models.ManyToManyField(FoodForMeal, through="FoodForStudent", blank=True, verbose_name="已点的餐")
     stu_class = models.ForeignKey(Class, verbose_name="班级", on_delete=models.CASCADE)
     stu_id = models.CharField(verbose_name="学号", max_length=6)
     name = models.CharField(verbose_name="姓名", max_length=16)
@@ -74,6 +74,11 @@ class Student(models.Model):
 
     def __str__(self) -> str:
         return f"{self.stu_id} {self.name}"
+
+
+class FoodForStudent(models.Model):
+    food_for_meal = models.ForeignKey(FoodForMeal, on_delete=models.CASCADE, verbose_name="点的菜")
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="学生")
 
 
 class Comment(models.Model):
