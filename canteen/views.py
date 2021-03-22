@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from . import models
 
 
@@ -18,6 +19,12 @@ def login_required(func):
             return redirect('canteen:login')
 
     return wrapper
+
+
+def get_next_menu(meal: models.Meal):
+    next_meal = min(models.Meal.objects.filter(
+        Q(date__gt=meal.date) | (Q(date=meal.date) & Q(index__gt=meal.index))))
+    return models.FoodForMeal.objects.filter(meal=next_meal)
 
 
 def index(request):
@@ -52,9 +59,8 @@ def class_login(request):
 @login_required
 def welcome(request):
     student = models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
-    latest_meal = models.FoodForMeal.objects.filter(meal__gt=student.last_order).order_by('meal')
     return render(request, 'canteen/welcome.html',
-                  {'student': student, 'food_list': latest_meal})
+                  {'student': student, 'food_list': get_next_menu(student.last_order)})
 
 
 @login_required
