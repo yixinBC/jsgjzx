@@ -49,6 +49,7 @@ class Food(models.Model):
     photo = ResizedImageField(size=[600, 600], verbose_name="菜品图片", upload_to="foods", null=True, blank=True)
     # 菜品评价后的总打星数
     stars = models.BigIntegerField(verbose_name="总星数", default=0)
+    price = models.PositiveIntegerField(verbose_name="价格", default=0)
 
     def __str__(self) -> str:
         return self.name
@@ -70,7 +71,7 @@ class Student(models.Model):
     stu_id = models.CharField(verbose_name="学号", max_length=6)
     name = models.CharField(verbose_name="姓名", max_length=16)
     password = models.CharField(verbose_name="密码—md5加密", max_length=32)
-    last_order = models.ForeignKey(Meal, verbose_name="上次点餐的Meal", on_delete=models.CASCADE, blank=True, null=True)
+    last_order = models.ForeignKey(Meal, verbose_name="上次点餐的Meal", on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"{self.stu_id} {self.name}"
