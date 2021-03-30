@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from . import models
@@ -59,6 +60,12 @@ def class_login(request):
 @login_required
 def welcome(request):
     student = models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
+    #
+    if student.last_order.date < (today := datetime.date.today()):
+        student.last_order = models.Meal.objects.filter(date_lt=today).last()
+        student.save(update_fields=['last_order'])
+    #
+    # TODO:make the code above a better approach
     return render(request, 'canteen/welcome.html',
                   {'student': student, 'food_list': get_next_menu(student.last_order)})
 

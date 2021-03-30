@@ -29,7 +29,7 @@
   </div>
 </nav>
 <div class="jumbotron">
-  <h1 class="display-4">{{ student.name }}：欢迎!</h1>
+  <h1 class="display-4" id="student" data-stu="{{ student.pk }}">{{ student.name }}：欢迎!</h1>
   <p class="lead" id="lead">您现在点的餐是:{{ food_list.0.meal.date }}{{ food_list.0.meal.description }}</p>
   <hr class="my-4">
   <a class="btn btn-success btn-lg" data-toggle="collapse" href="#askMeal" role="button" aria-expanded="false"
@@ -46,7 +46,7 @@
         <p class="card-text">价格:{{ foodForMeal.food.price }}<br>总份数:{{ foodForMeal.total }}<br>{{ foodForMeal.wanted }}想要</p>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-success" data-asked="{{ foodForMeal.pk }}" data-stu="{{ student.pk }}">点菜</button>
+        <button type="button" class="btn btn-success" data-asked="{{ foodForMeal.pk }}">点菜</button>
       </div>
     </div>
   {% endfor %}
