@@ -23,9 +23,12 @@ def login_required(func):
 
 
 def get_next_menu(meal: models.Meal):
-    next_meal = min(models.Meal.objects.filter(
-        Q(date__gt=meal.date) | (Q(date=meal.date) & Q(index__gt=meal.index))))
-    return models.FoodForMeal.objects.filter(meal=next_meal)
+    if (meal_list := models.Meal.objects.filter(
+            Q(date__gt=meal.date) | (Q(date=meal.date) & Q(index__gt=meal.index)))):
+        next_meal = min(meal_list)
+        return models.FoodForMeal.objects.filter(meal=next_meal)
+    else:
+        return
 
 
 def index(request):
@@ -36,8 +39,6 @@ def login(request):
     if request.method == 'GET':
         return render(request, 'canteen/login.html')
     elif request.method == 'POST':
-        if request.session.get('has_login'):
-            return redirect('canteen:welcome')
         stu_id = request.POST.get('stu_id')
         password = request.POST.get('password')
         try:
@@ -62,7 +63,7 @@ def welcome(request):
     student = models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
     #
     if student.last_order.date < (today := datetime.date.today()):
-        student.last_order = models.Meal.objects.filter(date_lt=today).last()
+        student.last_order = models.Meal.objects.filter(date__lt=today).last()
         student.save(update_fields=['last_order'])
     #
     # TODO:make the code above a better approach

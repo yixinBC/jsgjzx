@@ -20,24 +20,29 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav bd-navbar-nav flex-row">
       <li class="nav-item">
-        <a class="nav-link display-4" href="{% url 'index:index' %}">首页 <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{% url 'index:index' %}">首页 <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link display-4" href="{% url 'canteen:index' %}">点菜系统</a>
+        <a class="nav-link" href="{% url 'canteen:index' %}">点菜系统</a>
       </li>
     </ul>
   </div>
 </nav>
 <div class="jumbotron">
   <h1 class="display-4" id="student" data-stu="{{ student.pk }}">{{ student.name }}：欢迎!</h1>
+  {% if food_list %}
   <p class="lead" id="lead">您现在点的餐是:{{ food_list.0.meal.date }}{{ food_list.0.meal.description }}</p>
+  {% else %}
+  <p class="lead">暂无新的可点餐点!</p>
+  {% endif %}
   <hr class="my-4">
   <a class="btn btn-success btn-lg" data-toggle="collapse" href="#askMeal" role="button" aria-expanded="false"
      aria-controls="askMeal">开始点餐</a>
   <a class="btn btn-success btn-lg" href="{% url 'canteen:logout' %}" role="button">退出登录</a>
 </div>
 <div class="collapse overflow-auto" id="askMeal">
-  {% for foodForMeal in food_list %}
+  {% if food_list %}
+    {% for foodForMeal in food_list %}
     <div class="card">
       <img src="{{ foodForMeal.food.photo.url }}" alt="{{ foodForMeal.food }}"
            class="rounded card-img-top">
@@ -49,8 +54,12 @@
         <button type="button" class="btn btn-success" data-asked="{{ foodForMeal.pk }}">点菜</button>
       </div>
     </div>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+  <p><strong>暂无新数据!</strong></p>
+  {% endif %}
 </div>
+{% if food_list %}<script src="{% static 'canteen/canteen_app.js' %}"></script>{% endif %}
 <script src="{% static 'jquery.js' %}"></script>
 <script src="{% static 'bootstrap.bundle.js' %}"></script>
 </body>
