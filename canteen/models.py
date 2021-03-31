@@ -1,5 +1,4 @@
 from django.db import models
-from django_resized import ResizedImageField
 
 
 # Create your models here.
@@ -46,7 +45,7 @@ class Food(models.Model):
     meal = models.ManyToManyField(Meal, through="FoodForMeal", verbose_name="关联餐")
     name = models.CharField(verbose_name="名称", max_length=32)
     commented = models.IntegerField(verbose_name="评价人数", default=0)
-    photo = ResizedImageField(size=[600, 600], verbose_name="菜品图片", upload_to="foods", null=True, blank=True)
+    photo = models.ImageField(verbose_name="菜品图片", upload_to="foods", null=True, blank=True)
     # 菜品评价后的总打星数
     stars = models.BigIntegerField(verbose_name="总星数", default=0)
     price = models.PositiveIntegerField(verbose_name="价格", default=0)
