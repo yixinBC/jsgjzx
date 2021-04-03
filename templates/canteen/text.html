@@ -1,0 +1,19 @@
+<div id="data" data-json="{{ data }}"></div>
+{% if food_list %}
+  {% for foodForMeal in food_list %}
+    <div class="card">
+      <img src="{{ foodForMeal.food.photo.url }}" alt="{{ foodForMeal.food }}"
+           class="rounded card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">{{ foodForMeal.food }}</h5>
+        <p class="card-text">价格:{{ foodForMeal.food.price }}<br>总份数:{{ foodForMeal.total }}<br>{{ foodForMeal.wanted }}想要
+        </p>
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-success" data-asked="{{ foodForMeal.pk }}">点菜</button>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <p><strong>暂无新数据!</strong></p>
+{% endif %}

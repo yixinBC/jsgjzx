@@ -1,7 +1,9 @@
 import datetime
+import json
 from django.shortcuts import render, redirect
-from django.db.models import Q
-from . import models
+from django.db.models import Q, F
+from django.views.decorators.http import require_POST
+from .models import *
 
 
 # Create your views here.
@@ -11,22 +13,22 @@ def login_required(func):
             return func(request, *args, **kwargs)
         else:
             try:
-                if models.Student.objects.get(stu_id=request.COOKIES.get('stu_id')
-                                              ).password == request.COOKIES.get('password'):
+                if Student.objects.get(stu_id=request.COOKIES.get('stu_id')
+                                       ).password == request.COOKIES.get('password'):
                     request.session['has_login'] = True
                     return func(request, *args, **kwargs)
-            except models.Student.DoesNotExist:
+            except Student.DoesNotExist:
                 return redirect('canteen:login')
             return redirect('canteen:login')
 
     return wrapper
 
 
-def get_next_menu(meal: models.Meal):
-    if (meal_list := models.Meal.objects.filter(
+def get_next_menu(meal: Meal):
+    if (meal_list := Meal.objects.filter(
             Q(date__gt=meal.date) | (Q(date=meal.date) & Q(index__gt=meal.index)))):
         next_meal = min(meal_list)
-        return models.FoodForMeal.objects.filter(meal=next_meal)
+        return FoodForMeal.objects.filter(meal=next_meal)
     else:
         return
 
@@ -42,15 +44,15 @@ def login(request):
         stu_id = request.POST.get('stu_id')
         password = request.POST.get('password')
         try:
-            if models.Student.objects.get(stu_id=stu_id).password == password:
+            if Student.objects.get(stu_id=stu_id).password == password:
                 response = redirect('canteen:welcome')
                 response.set_cookie('stu_id', stu_id, max_age=60 * 60 * 24 * 7)
                 response.set_cookie('password', password, max_age=60 * 60 * 24 * 7)
                 request.session['has_login'] = True
                 return response
-        except models.Student.DoesNotExist:
-            return render(request, 'canteen/login.html', {'error_msg': '编号或密码错误，请重新输入！'})
-        return render(request, 'canteen/login.html', {'error_msg': '编号或密码错误，请重新输入！'})
+        except Student.DoesNotExist:
+            return render(request, 'canteen/login.html', {'error_msg':'编号或密码错误，请重新输入！'})
+        return render(request, 'canteen/login.html', {'error_msg':'编号或密码错误，请重新输入！'})
 
 
 @login_required
@@ -60,15 +62,92 @@ def class_login(request):
 
 @login_required
 def welcome(request):
-    student = models.Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
+    student = Student.objects.get(stu_id=request.COOKIES.get('stu_id'))
     #
     if student.last_order.date < (today := datetime.date.today()):
-        student.last_order = models.Meal.objects.filter(date__lt=today).last()
+        student.last_order = Meal.objects.filter(date__lt=today).last()
         student.save(update_fields=['last_order'])
     #
     # TODO:make the code above a better approach
     return render(request, 'canteen/welcome.html',
-                  {'student': student, 'food_list': get_next_menu(student.last_order)})
+                  {'student':student, 'food_list':get_next_menu(student.last_order), 'data':{}})
+
+
+@require_POST
+def askmeal(request):
+    if request.content_type == "application/json":
+        result = json.loads(request.body.decode())
+        if 'student' in result.keys() and 'foodForMeal' in result.keys():
+            try:
+                student = Student.objects.get(pk=result.get('student'))
+                food_for_meal = FoodForMeal.objects.get(pk=result.get('foodForMeal'))
+                student.asked_meals.add(food_for_meal)
+                student.last_order = food_for_meal.meal
+                student.save(update_fields=['last_order'])
+                food_for_meal.wanted = F('wanted') + 1
+                food_for_meal.save(update_fields=['wanted'])
+            except Exception as err:
+                return render(request, 'canteen/text.html',
+                              {'data': json.dumps({'error_message': str(err), 'success': False})})
+            if food_list := get_next_menu(student.last_order):
+                meal = food_list[0].meal
+                return render(request, 'canteen/text.html',
+                              {'food_list': food_list,
+                               'data': json.dumps({
+                                   'success': True,
+                                   'hasContent': True,
+                                   'date': str(meal.date),
+                                   'description': meal.description,
+                                   'meal_pk': meal.pk
+                               })})
+            else:
+                return render(request, 'canteen/text.html',
+                              {'food_list': food_list,
+                               'data': json.dumps({
+                                   'success': True,
+                                   'hasContent': False
+                               })})
+        return render(request, 'canteen/text.html',
+                      {'data': json.dumps({'success': False, 'error_message': 'bad_post'})})
+    return render(request, 'canteen/text.html',
+                  {'data': json.dumps({'success': False, 'error_message': 'bad_post'})})
+
+
+@require_POST
+def nextmeal(request):
+    if request.content_type == "application/json":
+        result = json.loads(request.body.decode())
+        if 'student' in result.keys() and 'meal_pk' in result.keys():
+            try:
+                student = Student.objects.get(pk=result.get('student'))
+                meal = Meal.objects.get(pk=result.get('meal_pk'))
+                student.last_order = meal
+                student.save(update_fields=['last_order'])
+            except Exception as err:
+                return render(request, 'canteen/text.html',
+                              {'data': json.dumps({'error_message': str(err), 'success': False})})
+            if food_list := get_next_menu(meal):
+                next_meal = food_list[0].meal
+                return render(request, 'canteen/text.html',
+                              {'food_list': food_list,
+                               'data': json.dumps({
+                                   'success': True,
+                                   'hasContent': True,
+                                   'date': next_meal.date,
+                                   'description': next_meal.description,
+                                   'meal_pk': next_meal.pk
+                               })})
+            else:
+                return render(request, 'canteen/text.html',
+                              {'food_list': food_list,
+                               'data': json.dumps({
+                                   'success': True,
+                                   'hasContent': False
+                               })})
+        return render(request, 'canteen/text.html',
+                      {'data': json.dumps({'success': False, 'error_message': 'bad_post'})})
+    return render(request, 'canteen/text.html',
+                  {'data': json.dumps({'success': False, 'error_message': 'bad_post'})})
 
 
 @login_required
