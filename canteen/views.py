@@ -1,8 +1,10 @@
 import datetime
 import json
+import xlwt
 from django.shortcuts import render, redirect
 from django.db.models import Q, F
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 from .models import *
 
 
@@ -51,8 +53,8 @@ def login(request):
                 request.session['has_login'] = True
                 return response
         except Student.DoesNotExist:
-            return render(request, 'canteen/login.html', {'error_msg':'编号或密码错误，请重新输入！'})
-        return render(request, 'canteen/login.html', {'error_msg':'编号或密码错误，请重新输入！'})
+            return render(request, 'canteen/login.html', {'error_msg': '编号或密码错误，请重新输入！'})
+        return render(request, 'canteen/login.html', {'error_msg': '编号或密码错误，请重新输入！'})
 
 
 @login_required
@@ -70,17 +72,17 @@ def welcome(request):
     #
     # TODO:make the code above a better approach
     return render(request, 'canteen/welcome.html',
-                  {'student':student, 'food_list':get_next_menu(student.last_order), 'data':{}})
+                  {'student': student, 'food_list': get_next_menu(student.last_order), 'data': {}})
 
 
 @require_POST
 def askmeal(request):
     if request.content_type == "application/json":
-        result = json.loads(request.body.decode())
-        if 'student' in result.keys() and 'foodForMeal' in result.keys():
+        data = json.loads(request.body.decode())
+        if 'student' in data.keys() and 'foodForMeal' in data.keys():
             try:
-                student = Student.objects.get(pk=result.get('student'))
-                food_for_meal = FoodForMeal.objects.get(pk=result.get('foodForMeal'))
+                student = Student.objects.get(pk=data.get('student'))
+                food_for_meal = FoodForMeal.objects.get(pk=data.get('foodForMeal'))
                 student.asked_meals.add(food_for_meal)
                 student.last_order = food_for_meal.meal
                 student.save(update_fields=['last_order'])
@@ -116,11 +118,11 @@ def askmeal(request):
 @require_POST
 def nextmeal(request):
     if request.content_type == "application/json":
-        result = json.loads(request.body.decode())
-        if 'student' in result.keys() and 'meal_pk' in result.keys():
+        data = json.loads(request.body.decode())
+        if 'student' in data.keys() and 'meal_pk' in data.keys():
             try:
-                student = Student.objects.get(pk=result.get('student'))
-                meal = Meal.objects.get(pk=result.get('meal_pk'))
+                student = Student.objects.get(pk=data.get('student'))
+                meal = Meal.objects.get(pk=data.get('meal_pk'))
                 student.last_order = meal
                 student.save(update_fields=['last_order'])
             except Exception as err:
@@ -157,3 +159,21 @@ def logout(request):
     response.delete_cookie('stu_id')
     response.delete_cookie('password')
     return response
+
+
+def export_excel(request, meal_pk):
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment;filename=汇总数据.xls'
+    wb = xlwt.Workbook(encoding='utf8')
+    sheet = wb.add_sheet('sheet1')
+    food_list = FoodForMeal.objects.filter(meal__pk=meal_pk)
+    for i in range(len(food_list)):
+        sheet.write(0, i, food_list[i].food.name)
+        sheet.write(1, i, food_list[i].wanted)
+    wb.save(response)
+    return response
+
+
+def result(request):
+    meal_list = Meal.objects.all()
+    return render(request, 'canteen/result.html', {'meal_list': meal_list})

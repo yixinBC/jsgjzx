@@ -10,5 +10,7 @@ urlpatterns = [
     path('welcome', views.welcome, name='welcome'),
     path('logout', views.logout, name='logout'),
     path('askmeal', views.askmeal, name='askmeal'),
-    path('nextmeal', views.nextmeal, name='next')
+    path('nextmeal', views.nextmeal, name='next'),
+    path('export_excel/<int:meal_pk>', views.export_excel, name='export_excel'),
+    path('result', views.result, name='result')
 ]
