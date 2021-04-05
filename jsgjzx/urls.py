@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('canteen/', include('canteen.urls')),
+    path('activity/', include('activity.urls')),
     path('admin/', admin.site.urls),
     * static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     path('', include('index.urls'))
