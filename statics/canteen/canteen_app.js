@@ -39,6 +39,7 @@ app.addEventListener('click', (event) => {
           app.innerHTML = text;
           let data = JSON.parse(document.getElementById('data').dataset.json);
           if (data.success) {
+            alert('点菜成功!');
             if (data.hasContent) {
               lead.innerText = `您现在点的餐是:${data.date}${data.description}`;
               lead.dataset.pk = data.meal_pk
