@@ -64,6 +64,7 @@ class FoodForMeal(models.Model):
         return f"{self.meal} {self.food} {self.wanted}想要"
 
 
+"""
 class Student(models.Model):
     asked_meals = models.ManyToManyField(FoodForMeal, blank=True, verbose_name="已点的餐")
     stu_class = models.ForeignKey(Class, verbose_name="班级", on_delete=models.CASCADE)
@@ -74,11 +75,12 @@ class Student(models.Model):
 
     def __str__(self) -> str:
         return f"{self.stu_id} {self.name}"
+"""
 
 
 class Comment(models.Model):
     food = models.ForeignKey(Food, verbose_name="所评食物", on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, verbose_name="评价学生", on_delete=models.CASCADE)
+    class_from = models.ForeignKey(Class, verbose_name="评价班级", on_delete=models.CASCADE)
     pub_date = models.DateTimeField(verbose_name="发表日期")
     stars = models.PositiveSmallIntegerField(verbose_name="打分")
     content = models.CharField(verbose_name="评论内容", max_length=1024)
