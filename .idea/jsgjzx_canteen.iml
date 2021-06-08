@@ -38,6 +38,7 @@
         <option value="$MODULE_DIR$/templates/index" />
         <option value="$MODULE_DIR$/templates/canteen" />
         <option value="$MODULE_DIR$/statics" />
+        <option value="$MODULE_DIR$/templates/activity" />
       </list>
     </option>
   </component>

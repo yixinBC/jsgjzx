@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'canteen.apps.CanteenConfig',
+    'activity.apps.ActivityConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,3 +127,5 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = 'media'
 
 MEDIA_URL = '/image/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

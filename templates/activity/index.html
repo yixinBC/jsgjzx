@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="{% static 'Si.ico' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+  <title>嘉善高级中学建党百年主题活动展示页</title>
+</head>
+<body>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <img src="{% static 'bg.png' %}" alt="这是一个手绘背景">
+  </div>
+</div>
+{% for activity in activities %}
+<div class="card mb-3">
+    <img src="{{ activity.picture_set.first.photo.url }}" class="card-img-top" alt="{{ activity.picture_set.first.description}}">
+    <div class="card-body">
+      <h5 class="card-title">{{ activity.topic }}</h5>
+      <p class="card-text">{{ activity.detail }}</p>
+      <p class="card-text"><small class="text-muted">{{ activity.date }}</small></p>
+      <p><a href="{% url 'activity:detail' activity.id %}"><button class="btn btn-danger">查看详情</button></a></p>
+    </div>
+</div>
+{% endfor %}
+<script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'bootstrap.bundle.js' %}"></script>
+</body>
+</html>

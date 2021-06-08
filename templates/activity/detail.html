@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="{% static 'Si.ico' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.css' %}">
+  <title>嘉善高级中学建党百年主题活动展示页</title>
+</head>
+<body>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <img src="{% static 'bg.png' %}" alt="这是一个手绘背景">
+  </div>
+</div>
+<div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    {% for picture in pictures %}
+      {% if forloop.counter0 == 0%}
+        <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+      {% else %}
+        <li data-target="#carouselExampleCaptions" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="carousel-inner">
+    {% for picture in pictures %}
+      {% if forloop.counter0 == 0%}
+        <div class="carousel-item active">
+          <img src="{{ picture.photo.url }}" class="d-block w-100" alt="{{ picture.photo.description }}">
+          <div class="carousel-caption d-none d-md-block">
+            <p>{{ picture.description }}</p>
+          </div>
+        </div>
+      {% else %}
+        <div class="carousel-item">
+          <img src="{{ picture.photo.url }}" class="d-block w-100" alt="{{ picture.photo.description }}">
+          <div class="carousel-caption d-none d-md-block">
+            <p>{{ picture.description }}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-target="#carouselExampleCaptions"  data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">前一张</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-target="#carouselExampleCaptions"  data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">后一张</span>
+  </button>
+</div>
+<script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'bootstrap.bundle.js' %}"></script>
+</body>
+</html>
