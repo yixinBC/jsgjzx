@@ -9,11 +9,7 @@
   <title>嘉善高级中学建党百年主题活动展示页</title>
 </head>
 <body>
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <img src="{% static 'bg.png' %}" alt="这是一个手绘背景">
-  </div>
-</div>
+<img src="{% static 'bg.png' %}" alt="这是一个手绘背景" style="width: inherit">
 {% for activity in activities %}
 <div class="card mb-3">
     <img src="{{ activity.picture_set.first.photo.url }}" class="card-img-top" alt="{{ activity.picture_set.first.description}}">
